@@ -32,6 +32,10 @@ interface ILakeCardData {
   url?: string;
 }
 
+type ITurndownLike = {
+  turndown: (input: string) => string;
+};
+
 function normalizeApiUrl(url?: string) {
   return (url || DEFAULT_OBSIDIAN_API_URL).trim().replace(/\/+$/, '');
 }
@@ -99,12 +103,12 @@ function normalizeTableCellValue(value: string) {
   return normalized || ' ';
 }
 
-function renderTableCell(service: any, cell: Element) {
+function renderTableCell(service: ITurndownLike, cell: Element) {
   const content = service.turndown((cell as HTMLElement).innerHTML || '').trim();
   return normalizeTableCellValue(content || cell.textContent || '');
 }
 
-function convertTableToMarkdown(service: any, node: HTMLElement) {
+function convertTableToMarkdown(service: ITurndownLike, node: HTMLElement) {
   const rows = Array.from(node.querySelectorAll('tr'))
     .map(row => Array.from(row.children).filter(cell => cell.nodeName === 'TH' || cell.nodeName === 'TD'))
     .filter(row => row.length);
@@ -219,7 +223,7 @@ function buildFrontmatter(params: {
   const lines = [
     '---',
     `标题: "${escapeYaml(params.title)}"`,
-    `链接: "${escapeYaml(params.sourceUrl)}"`
+    `链接: "${escapeYaml(params.sourceUrl)}"`,
   ];
 
   if (params.tags?.length) {

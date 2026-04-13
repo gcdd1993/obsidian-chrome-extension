@@ -13,13 +13,25 @@
   max-width: 100%;
 }
 
-@align: center, inherit, justify, left, right;
+.center {
+  text-align: center;
+}
 
-each(@align, {
-  .@{value} {
-    text-align: @value;
-  }
-});
+.inherit {
+  text-align: inherit;
+}
+
+.justify {
+  text-align: justify;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
 
 
 .font-size-calc(@calc) {
@@ -325,65 +337,365 @@ each(@align, {
   }
 }
 
-each(range(9), {
-  .yuque-green-@{value} {
-    color: ~"@{yuque-green-@{value}}";
-  }
-});
+.yuque-green-1 {
+  color: @yuque-green-1;
+}
 
-each(range(9), {
-  .yuque-grey-@{value} {
-    color: ~"@{grey-@{value}}";
-  }
-});
+.yuque-green-2 {
+  color: @yuque-green-2;
+}
 
-each(range(9), {
-  .blue-@{value} {
-    color: ~"@{blue-@{value}}";
-  }
-});
+.yuque-green-3 {
+  color: @yuque-green-3;
+}
 
-each(range(9), {
-  .organge-@{value} {
-    color: ~"@{orange-@{value}}";
-  }
-});
+.yuque-green-4 {
+  color: @yuque-green-4;
+}
 
-each(range(9), {
-  .yellow-@{value} {
-    color: ~"@{yellow-@{value}}";
-  }
-});
+.yuque-green-5 {
+  color: @yuque-green-5;
+}
 
-each(range(9), {
-  .red-@{value} {
-    color: ~"@{red-@{value}}";
-  }
-});
+.yuque-green-6 {
+  color: @yuque-green-6;
+}
 
-each(range(9), {
-  .magenta-@{value} {
-    color: ~"@{magenta-@{value}}";
-  }
-});
+.yuque-green-7 {
+  color: @yuque-green-7;
+}
 
-each(range(9), {
-  .purple-@{value} {
-    color: ~"@{purple-@{value}}";
-  }
-});
+.yuque-green-8 {
+  color: @yuque-green-8;
+}
 
-each(range(9), {
-  .cyan-@{value} {
-    color: ~"@{cyan-@{value}}";
-  }
-});
+.yuque-green-9 {
+  color: @yuque-green-9;
+}
 
-each(range(9), {
-  .pea-green-@{value} {
-    color: ~"@{pea-green-@{value}}";
-  }
-});
+.yuque-grey-1 {
+  color: @grey-1;
+}
+
+.yuque-grey-2 {
+  color: @grey-2;
+}
+
+.yuque-grey-3 {
+  color: @grey-3;
+}
+
+.yuque-grey-4 {
+  color: @grey-4;
+}
+
+.yuque-grey-5 {
+  color: @grey-5;
+}
+
+.yuque-grey-6 {
+  color: @grey-6;
+}
+
+.yuque-grey-7 {
+  color: @grey-7;
+}
+
+.yuque-grey-8 {
+  color: @grey-8;
+}
+
+.yuque-grey-9 {
+  color: @grey-9;
+}
+
+.blue-1 {
+  color: @blue-1;
+}
+
+.blue-2 {
+  color: @blue-2;
+}
+
+.blue-3 {
+  color: @blue-3;
+}
+
+.blue-4 {
+  color: @blue-4;
+}
+
+.blue-5 {
+  color: @blue-5;
+}
+
+.blue-6 {
+  color: @blue-6;
+}
+
+.blue-7 {
+  color: @blue-7;
+}
+
+.blue-8 {
+  color: @blue-8;
+}
+
+.blue-9 {
+  color: @blue-9;
+}
+
+.organge-1 {
+  color: @orange-1;
+}
+
+.organge-2 {
+  color: @orange-2;
+}
+
+.organge-3 {
+  color: @orange-3;
+}
+
+.organge-4 {
+  color: @orange-4;
+}
+
+.organge-5 {
+  color: @orange-5;
+}
+
+.organge-6 {
+  color: @orange-6;
+}
+
+.organge-7 {
+  color: @orange-7;
+}
+
+.organge-8 {
+  color: @orange-8;
+}
+
+.organge-9 {
+  color: @orange-9;
+}
+
+.yellow-1 {
+  color: @yellow-1;
+}
+
+.yellow-2 {
+  color: @yellow-2;
+}
+
+.yellow-3 {
+  color: @yellow-3;
+}
+
+.yellow-4 {
+  color: @yellow-4;
+}
+
+.yellow-5 {
+  color: @yellow-5;
+}
+
+.yellow-6 {
+  color: @yellow-6;
+}
+
+.yellow-7 {
+  color: @yellow-7;
+}
+
+.yellow-8 {
+  color: @yellow-8;
+}
+
+.yellow-9 {
+  color: @yellow-9;
+}
+
+.red-1 {
+  color: @red-1;
+}
+
+.red-2 {
+  color: @red-2;
+}
+
+.red-3 {
+  color: @red-3;
+}
+
+.red-4 {
+  color: @red-4;
+}
+
+.red-5 {
+  color: @red-5;
+}
+
+.red-6 {
+  color: @red-6;
+}
+
+.red-7 {
+  color: @red-7;
+}
+
+.red-8 {
+  color: @red-8;
+}
+
+.red-9 {
+  color: @red-9;
+}
+
+.magenta-1 {
+  color: @magenta-1;
+}
+
+.magenta-2 {
+  color: @magenta-2;
+}
+
+.magenta-3 {
+  color: @magenta-3;
+}
+
+.magenta-4 {
+  color: @magenta-4;
+}
+
+.magenta-5 {
+  color: @magenta-5;
+}
+
+.magenta-6 {
+  color: @magenta-6;
+}
+
+.magenta-7 {
+  color: @magenta-7;
+}
+
+.magenta-8 {
+  color: @magenta-8;
+}
+
+.magenta-9 {
+  color: @magenta-9;
+}
+
+.purple-1 {
+  color: @purple-1;
+}
+
+.purple-2 {
+  color: @purple-2;
+}
+
+.purple-3 {
+  color: @purple-3;
+}
+
+.purple-4 {
+  color: @purple-4;
+}
+
+.purple-5 {
+  color: @purple-5;
+}
+
+.purple-6 {
+  color: @purple-6;
+}
+
+.purple-7 {
+  color: @purple-7;
+}
+
+.purple-8 {
+  color: @purple-8;
+}
+
+.purple-9 {
+  color: @purple-9;
+}
+
+.cyan-1 {
+  color: @cyan-1;
+}
+
+.cyan-2 {
+  color: @cyan-2;
+}
+
+.cyan-3 {
+  color: @cyan-3;
+}
+
+.cyan-4 {
+  color: @cyan-4;
+}
+
+.cyan-5 {
+  color: @cyan-5;
+}
+
+.cyan-6 {
+  color: @cyan-6;
+}
+
+.cyan-7 {
+  color: @cyan-7;
+}
+
+.cyan-8 {
+  color: @cyan-8;
+}
+
+.cyan-9 {
+  color: @cyan-9;
+}
+
+.pea-green-1 {
+  color: @pea-green-1;
+}
+
+.pea-green-2 {
+  color: @pea-green-2;
+}
+
+.pea-green-3 {
+  color: @pea-green-3;
+}
+
+.pea-green-4 {
+  color: @pea-green-4;
+}
+
+.pea-green-5 {
+  color: @pea-green-5;
+}
+
+.pea-green-6 {
+  color: @pea-green-6;
+}
+
+.pea-green-7 {
+  color: @pea-green-7;
+}
+
+.pea-green-8 {
+  color: @pea-green-8;
+}
+
+.pea-green-9 {
+  color: @pea-green-9;
+}
 
 .white {
   color: @white;
