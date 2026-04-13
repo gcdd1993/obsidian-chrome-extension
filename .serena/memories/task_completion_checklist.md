@@ -1,0 +1,6 @@
+- 修改 TS/TSX/核心逻辑后，至少运行 npm run type:check。
+- 修改前端或公共逻辑后，运行 npm run lint；若只改样式，至少运行 npm run lint:less。
+- 涉及构建、manifest、资源、打包脚本或发布内容时，运行 npm run build 验证 dist 产物。
+- 若改动 SVG 图标映射相关内容，补跑 npm run update:assets。
+- 涉及浏览器扩展行为时，用最新 dist/<version> 在 Chrome/Edge 手工验证对应入口页、content script、sidePanel 或后台行为。
+- 保持改动最小化，不要顺手重构无关模块；提交前检查 git diff。

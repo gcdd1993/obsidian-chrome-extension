@@ -1,0 +1,14 @@
+- 安装依赖：npm install
+- 开发构建：npm run dev
+- 生产构建：npm run build
+- 仅打包 bundle：npm run bundle
+- Beta bundle：npm run bundle:beta
+- 类型检查：npm run type:check
+- JS/TS lint：npm run lint:js
+- Less lint：npm run lint:less
+- 全量 lint：npm run lint
+- 国际化检查：npm run translate:check
+- 更新 SVG 资源映射：npm run update:assets
+- 清理产物：npm run clean:dist
+- Windows 常用命令：Set-Location <path>，Get-ChildItem，Get-Content，Select-String，git status，git diff，git log --oneline。 
+- 运行说明：npm run dev 会持续输出到 dist/<version>；在 Chrome/Edge 扩展管理页加载该目录作为未打包扩展。

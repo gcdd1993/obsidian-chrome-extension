@@ -1,0 +1,7 @@
+- 缩进与换行：2 空格缩进，LF，UTF-8，文件末尾保留换行；Markdown 允许尾随空白。
+- JS/TS 风格：单引号、保留分号、尾随逗号、printWidth 120；导入通常不写 ts/tsx/js/jsx 扩展名。
+- TypeScript：开启 strict、noUnusedLocals、esModuleInterop、allowJs；优先保持类型安全，避免引入未使用变量。
+- ESLint：基于 eslint-config-egg，并叠加 TypeScript/React/React Hooks/import 规则；禁止多余空行；no-shadow 等部分规则为关闭状态。
+- 样式：Less 为主，组件级样式使用 .module.less；Stylelint 要求 2 空格缩进、声明/选择器空格一致、最长 200 列。
+- 命名约定：React 组件目录/文件多使用 PascalCase；hooks 使用 useXxx；共享基础模块放在 core、isomorphic、common 下。
+- 提交约束：commitlint 使用 conventional commits；husky pre-commit 会执行 npm run lint。

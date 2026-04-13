@@ -1,0 +1,6 @@
+- 项目用途：语雀浏览器插件，支持网页剪藏、图片剪藏、截图 OCR、划词操作、侧边栏记笔记并同步到语雀。
+- 技术栈：TypeScript、React 18、Ant Design 5、Less、Webpack 5、Manifest V3 Chrome Extension。
+- 构建方式：Webpack 多入口构建，输出到 dist/<version> 或 dist/<version>-beta>。
+- 主要入口：background service worker、content script、inject content script，以及 setting/editor/sidePanel 三个扩展页面。
+- 目录结构：src/background 负责后台逻辑与动作分发；src/pages 存放扩展页面；src/components 存放通用 React 组件；src/core 为核心能力如 OCR、截图、桥接与配置；src/isomorphic 放跨端共享能力；styles 为全局样式；scripts/tools 为构建与开发脚本。
+- 关键配置：tsconfig 启用 strict 与 noUnusedLocals；路径别名 @ 指向 src；manifest 使用 MV3 sidePanel 与 commands。

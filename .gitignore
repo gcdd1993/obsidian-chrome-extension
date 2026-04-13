@@ -139,3 +139,5 @@ docs_dist
 *.crx
 *.pem
 updates.xml
+
+!.serena
