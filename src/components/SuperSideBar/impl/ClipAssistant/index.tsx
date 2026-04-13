@@ -1,32 +1,25 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { Button, Spin, Tooltip, message, Input } from 'antd';
-import classnames from 'classnames';
-import { __i18n } from '@/isomorphic/i18n';
-import { webProxy } from '@/core/webProxy';
 import LakeEditor, { IEditorRef } from '@/components/lake-editor/editor';
-import { backgroundBridge } from '@/core/bridge/background';
-import { IStartOcrResult, ocrManager } from '@/core/ocr-manager';
-import { getBookmarkHTMLs, transformUrlToFile } from '@/isomorphic/util';
-import SelectSavePosition from '@/components/SelectSavePosition';
-import { buildParamsForDoc, buildParamsForNote } from '@/components/lake-editor/helper';
-import LinkHelper from '@/isomorphic/link-helper';
-import { STORAGE_KEYS } from '@/config';
-import useClipShortCut from '@/hooks/useClipShortCut';
-import {
-  ClipSelectAreaId,
-  ClipScreenOcrId,
-  ClipCollectLinkId,
-  ClipAssistantMessageKey,
-  ClipAssistantMessageActions,
-} from '@/isomorphic/event/clipAssistant';
-import Env from '@/isomorphic/env';
-import { DefaultSavePosition, ISavePosition } from '@/core/webProxy/mine';
-import { ITag } from '@/core/webProxy/tag';
-import { clipConfigManager } from '@/core/configManager/clip';
 import LarkIcon from '@/components/LarkIcon';
 import { superSidebar } from '@/components/SuperSideBar/index';
-import AddTagButton from './component/AddTagButton';
-import TagList from './component/TagList';
+import { backgroundBridge } from '@/core/bridge/background';
+import { clipConfigManager } from '@/core/configManager/clip';
+import { DEFAULT_OBSIDIAN_EXPORT_DIR, exportHtmlToObsidian } from '@/core/obsidian/export';
+import { IStartOcrResult, ocrManager } from '@/core/ocr-manager';
+import { webProxy } from '@/core/webProxy';
+import useClipShortCut from '@/hooks/useClipShortCut';
+import Env from '@/isomorphic/env';
+import {
+  ClipAssistantMessageActions,
+  ClipAssistantMessageKey,
+  ClipCollectLinkId,
+  ClipScreenOcrId,
+  ClipSelectAreaId,
+} from '@/isomorphic/event/clipAssistant';
+import { __i18n } from '@/isomorphic/i18n';
+import { getBookmarkHTMLs, transformUrlToFile } from '@/isomorphic/util';
+import { Button, Input, Spin, Tooltip, message } from 'antd';
+import classnames from 'classnames';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './index.module.less';
 
 const LoadingMessage = {
@@ -43,9 +36,7 @@ function ClipContent() {
   }>({
     loading: false,
   });
-  const [selectSavePosition, setSelectSavePosition] = useState<ISavePosition>();
-  const [userTags, setUserTags] = useState<ITag[]>([]);
-  const [selectTags, setSelectTags] = useState<ITag[]>([]);
+  const [selectedDir, setSelectedDir] = useState('');
   const [title, setTitle] = useState('');
 
   const onTitleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -71,13 +62,17 @@ function ClipContent() {
       return;
     }
 
-    const showSuccessMessage = (text: string, link: { text: string; href: string }) => {
+    const showSuccessMessage = (text: string, link?: { text: string; href: string }) => {
       if (Env.isRunningHostPage) {
         backgroundBridge.tab.showMessage({
           text,
           type: 'success',
           link,
         });
+        return;
+      }
+      if (!link) {
+        message.success(text);
         return;
       }
       message.success(
@@ -93,31 +88,17 @@ function ClipContent() {
 
     setLoading({ loading: true });
     try {
-      // 保存到小记
-      if (selectSavePosition?.id === DefaultSavePosition.id) {
-        const noteParams = {
-          ...(await buildParamsForNote(editor)),
-          tag_meta_ids: selectTags.map(item => item.id),
-        };
-        const result: any = await webProxy.note.create(noteParams);
-        const url = LinkHelper.goMyNote(result.id);
-        showSuccessMessage(__i18n('保存成功！'), {
-          href: url,
-          text: __i18n('去小记查看'),
-        });
-      } else {
-        const docParams = {
-          ...(await buildParamsForDoc(editor)),
-          title,
-          book_id: selectSavePosition?.id as number,
-        };
-        const doc = await webProxy.doc.create(docParams);
-        const url = LinkHelper.goDoc(doc);
-        showSuccessMessage(__i18n('保存成功！'), {
-          href: url,
-          text: __i18n('立即查看'),
-        });
-      }
+      const html = await editor.getContent('text/html');
+      const tab = await backgroundBridge.tab.getCurrent();
+      const clipConfig = await clipConfigManager.get();
+      const result = await exportHtmlToObsidian({
+        config: clipConfig,
+        exportDir: selectedDir,
+        html,
+        sourceUrl: tab?.url || '',
+        title: title.trim() || tab?.title || __i18n('未命名'),
+      });
+      showSuccessMessage(`${__i18n('已导出到 Obsidian')}：${result.filePath}`);
       if (Env.isRunningHostPage) {
         backgroundBridge.sidePanel.close();
       }
@@ -126,7 +107,7 @@ function ClipContent() {
       if (e.message === '文档上传未结束! 请删除未上传成功的图片') {
         message.error(__i18n('图片正在上传中，请稍后保存'));
       } else {
-        message.error(e.message || __i18n('保存失败，请重试！'));
+        message.error(e.message || __i18n('导出失败，请重试！'));
       }
     }
     setLoading({ loading: false });
@@ -212,7 +193,7 @@ function ClipContent() {
             context?.drawImage(image, 0, 0, width, height, 0, 0, width, height);
             canvas.toBlob(async blob => {
               const result = await ocrManager.startOCR('blob', blob || '');
-              resolve(result);
+              resolve(result as IStartOcrResult);
             });
           };
         });
@@ -233,15 +214,6 @@ function ClipContent() {
     setLoading({ loading: false });
   };
 
-  const handleRequestTag = async () => {
-    try {
-      const tags = await webProxy.tag.index();
-      setUserTags(tags);
-    } catch (error) {
-      //
-    }
-  };
-
   const renderLoading = () => {
     if (!loading.loading) {
       return null;
@@ -256,11 +228,10 @@ function ClipContent() {
   };
 
   useEffect(() => {
-    if (selectSavePosition?.id !== DefaultSavePosition.id) {
-      return;
-    }
-    handleRequestTag();
-  }, [selectSavePosition]);
+    clipConfigManager.get().then(clipConfig => {
+      setSelectedDir(clipConfig.obsidianExportDir || DEFAULT_OBSIDIAN_EXPORT_DIR);
+    });
+  }, []);
 
   useEffect(() => {
     const onStartScreenOcr = () => {
@@ -352,11 +323,7 @@ function ClipContent() {
           </div>
         </Tooltip>
       </div>
-      <div
-        className={classnames(styles.titleWrapper, {
-          [styles.none]: !selectSavePosition?.id,
-        })}
-      >
+      <div className={styles.titleWrapper}>
         <Input.TextArea
           className={styles.title}
           placeholder={__i18n('输入标题')}
@@ -368,20 +335,14 @@ function ClipContent() {
       <div className={styles.editorWrapper}>
         <LakeEditor ref={editorRef} value="" onLoad={onLoad} uploadImage={onUploadImage as any} onSave={onSave} />
       </div>
-      {selectSavePosition?.id === DefaultSavePosition.id && (
-        <TagList selectTags={selectTags} updateSelectTags={setSelectTags} />
-      )}
       <div className={styles.saveOptionWrapper}>
         <div className={styles.savePositionWrapper}>
-          <SelectSavePosition rememberKey={STORAGE_KEYS.USER.CLIPPING_SAVE_POSITION} onChange={setSelectSavePosition}>
-            <AddTagButton
-              tags={userTags}
-              selectTags={selectTags}
-              updateTags={setUserTags}
-              updateSelectTags={setSelectTags}
-              key={selectTags.length}
-            />
-          </SelectSavePosition>
+          <Input
+            className={styles.dirSelector}
+            value={selectedDir}
+            onChange={e => setSelectedDir(e.target.value)}
+            placeholder={__i18n('输入目录')}
+          />
         </div>
         <Button type="primary" onClick={onSave}>
           {__i18n('保存')}

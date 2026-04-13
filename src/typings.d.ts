@@ -10,6 +10,8 @@ declare module '*.less' {
 
 declare module '*.png'
 declare module '*.jpg'
+declare module 'turndown';
+declare module 'turndown-plugin-gfm';
 
 declare module '*.svg' {
   export default string;

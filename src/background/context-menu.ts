@@ -11,21 +11,21 @@ const menuList: MenuItem[] = [
   {
     id: 'save-to-yuque-notes',
     get title() {
-      return __i18n('剪藏到语雀');
+      return __i18n('剪藏到 Obsidian');
     },
     contexts: ['selection'],
   },
   {
     id: 'save-to-yuque',
     get title() {
-      return __i18n('语雀插件');
+      return __i18n('导出到 Obsidian');
     },
     contexts: ['page'],
   },
   {
     id: 'save-to-yuque-image',
     get title() {
-      return __i18n('剪藏到语雀');
+      return __i18n('剪藏到 Obsidian');
     },
     contexts: ['image'],
   },

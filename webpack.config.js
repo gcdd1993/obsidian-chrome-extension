@@ -34,6 +34,7 @@ const fileExtensions = [
   'jpg', 'jpeg', 'png', 'gif',
   'eot', 'otf', 'ttf', 'woff', 'woff2',
 ];
+const assetPathPattern = '[\\\\/]';
 
 const entries = {
   contentScript: 'content-scripts',
@@ -177,11 +178,11 @@ const rules = [
     ],
   },
   {
-    test: new RegExp('images/.+\.(' + fileExtensions.join('|') + ')$'),
+    test: new RegExp(`images${assetPathPattern}.+\\.(${fileExtensions.join('|')})$`),
     type: 'asset/inline',
   },
   {
-    test: new RegExp('icons/.+\.(' + fileExtensions.join('|') + ')$'),
+    test: new RegExp(`icons${assetPathPattern}.+\\.(${fileExtensions.join('|')})$`),
     type: 'asset/resource',
     generator: {
       filename: '[name][ext]',

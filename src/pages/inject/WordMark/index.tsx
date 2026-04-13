@@ -1,18 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import classnames from 'classnames';
-import LinkHelper from '@/isomorphic/link-helper';
-import { webProxy } from '@/core/webProxy';
-import { backgroundBridge } from '@/core/bridge/background';
-import { WordMarkOptionTypeEnum } from '@/core/configManager/wordMark';
-import { clipConfigManager } from '@/core/configManager/clip';
-import { useForceUpdate } from '@/hooks/useForceUpdate';
-import { buildParamsForDoc, buildParamsForNote } from '@/components/lake-editor/helper';
 import { useWordMarkContext } from '@/components/WordMarkLayout/useWordMarkContext';
+import { backgroundBridge } from '@/core/bridge/background';
+import { clipConfigManager } from '@/core/configManager/clip';
+import { WordMarkOptionTypeEnum } from '@/core/configManager/wordMark';
+import { exportHtmlToObsidian } from '@/core/obsidian/export';
+import { webProxy } from '@/core/webProxy';
+import { useForceUpdate } from '@/hooks/useForceUpdate';
 import { MonitorAction } from '@/isomorphic/constant/monitor';
 import { useInjectContent } from '@/pages/inject/components/InjectLayout';
+import classnames from 'classnames';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Editor, { IEditorRef } from './Editor';
-import Panel from './Panel';
 import Inner from './Inner';
+import Panel from './Panel';
 import styles from './index.module.less';
 
 function WordMarkApp() {
@@ -49,48 +48,23 @@ function WordMarkApp() {
       }
       try {
         isSaving.current = true;
-        if (!wordMarkContext.defaultSavePosition.id) {
-          // 保存到小记
-          const noteParams = {
-            ...(await buildParamsForNote(editor as any)),
-          };
-          const result: any = await webProxy.note.create(noteParams);
-          const url = LinkHelper.goMyNote(result.id);
-          apiMessage?.success(
-            <span>
-              {__i18n('保存成功！')}
-              &nbsp;&nbsp;
-              <a target="_blank" href={url} className={styles.link}>
-                {__i18n('去小记查看')}
-              </a>
-            </span>,
-          );
-        } else {
-          // 保存到知识库
-          const tab = await backgroundBridge.tab.getCurrent();
-          const docParams = {
-            ...(await buildParamsForDoc(editor as any)),
-            title: __i18n('[来自剪藏] {title}', {
-              title: tab?.title || '',
-            }),
-            book_id: wordMarkContext.defaultSavePosition.id,
-          };
-          const doc = await webProxy.doc.create(docParams);
-          const url = LinkHelper.goDoc(doc);
-          apiMessage?.success(
-            <span>
-              {__i18n('保存成功！')}
-              &nbsp;&nbsp;
-              <a target="_blank" href={url}>
-                {__i18n('立即查看')}
-              </a>
-            </span>,
-          );
-        }
+        const tab = await backgroundBridge.tab.getCurrent();
+        const html = await (editor as any)?.getContent?.('text/html');
+        const clipConfig = await clipConfigManager.get();
+        const result = await exportHtmlToObsidian({
+          config: clipConfig,
+          html: html || '',
+          savePosition: wordMarkContext.defaultSavePosition,
+          sourceUrl: tab?.url || window.location.href,
+          title: __i18n('[来自剪藏] {title}', {
+            title: tab?.title || document.title || '',
+          }),
+        });
+        apiMessage?.success(`${__i18n('已导出到 Obsidian')}：${result.filePath}`);
         showWordMarkRef.current = false;
         forceUpdate();
-      } catch (e) {
-        apiMessage?.error(__i18n('保存失败，请重试！'));
+      } catch (e: any) {
+        apiMessage?.error(e?.message || __i18n('导出失败，请重试！'));
       }
       isSaving.current = false;
     },

@@ -59,11 +59,11 @@ const localAssetsPaths = {
     name: 'katex.min.js',
   },
   react: {
-    src: require.resolve('react').replace('/index.js', '/umd/react.production.min.js'),
+    src: path.resolve(path.dirname(require.resolve('react')), 'umd', 'react.production.min.js'),
     name: 'react.production.min.js',
   },
   reactDOM: {
-    src: require.resolve('react-dom').replace('/index.js', '/umd/react-dom.production.min.js'),
+    src: path.resolve(path.dirname(require.resolve('react-dom')), 'umd', 'react-dom.production.min.js'),
     name: 'react-dom.production.min.js',
   },
 };
@@ -109,8 +109,7 @@ module.exports.presetEditor = async function main() {
 
   const localAssets = Object.values(localAssetsPaths);
   for (let i = 0; i < localAssets.length; i++) {
-    const filePath = localAssets[i].src;
-    const fileName = path.basename(filePath);
+    const { src: filePath, name: fileName } = localAssets[i];
     const localFilename = path.resolve(distFolder, fileName);
     mkdirSync(distFolder, { recursive: true });
     console.log(`# copy file to ${chalk.cyan(localFilename)} from ${filePath}`);

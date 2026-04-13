@@ -90,11 +90,18 @@
     flex: 0 0 auto;
     padding: 0 16px 24px;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
 
     .savePositionWrapper {
       display: flex;
-      gap: 8px;
+      flex: 1;
+      min-width: 0;
+
+      .dirSelector {
+        flex: 1;
+        min-width: 0;
+      }
     }
   }
 }

@@ -51,6 +51,8 @@
     "react-dom": "^18.2.0",
     "react-spring": "^9.7.3",
     "semver-compare": "^1.0.0",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2",
     "uuid": "^9.0.1",
     "whatwg-fetch": "^3.6.17"
   },

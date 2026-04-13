@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Switch } from 'antd';
-import { ILevitateConfig, LevitateConfigKey, levitateConfigManager } from '@/core/configManager/levitate';
-import { ClipConfigKey, IClipConfig, clipConfigManager } from '@/core/configManager/clip';
 import DisableUrlCard, { IDisableUrlItem } from '@/components/DisableUrlCard';
+import { ClipConfigKey, IClipConfig, clipConfigManager } from '@/core/configManager/clip';
+import { ILevitateConfig, LevitateConfigKey, levitateConfigManager } from '@/core/configManager/levitate';
+import { Input, Switch } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './index.module.less';
 
 function Shortcut() {
@@ -65,6 +65,30 @@ function Shortcut() {
               checked={clipConfig.addLink}
               onChange={() => onClipConfigChange('addLink', !clipConfig.addLink)}
               size="small"
+            />
+          </div>
+          <div className={styles.configItem}>
+            <div className={styles.desc}>{__i18n('Obsidian API 地址')}</div>
+            <Input
+              value={clipConfig.obsidianApiUrl}
+              placeholder="https://127.0.0.1:27124"
+              onChange={e => onClipConfigChange('obsidianApiUrl', e.target.value)}
+            />
+          </div>
+          <div className={styles.configItem}>
+            <div className={styles.desc}>{__i18n('Obsidian API Key')}</div>
+            <Input.Password
+              value={clipConfig.obsidianApiKey}
+              placeholder={__i18n('在 Obsidian Local REST API 插件中获取')}
+              onChange={e => onClipConfigChange('obsidianApiKey', e.target.value)}
+            />
+          </div>
+          <div className={styles.configItem}>
+            <div className={styles.desc}>{__i18n('Obsidian 导出目录')}</div>
+            <Input
+              value={clipConfig.obsidianExportDir}
+              placeholder="Yuque Export"
+              onChange={e => onClipConfigChange('obsidianExportDir', e.target.value)}
             />
           </div>
         </div>
