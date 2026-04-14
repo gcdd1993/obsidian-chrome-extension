@@ -233,7 +233,7 @@ function buildFrontmatter(params: {
       .forEach(tag => lines.push(`  - "${escapeYaml(tag)}"`));
   }
 
-  lines.push('---', '');
+  lines.push('---');
   return lines.join('\n');
 }
 
@@ -243,10 +243,10 @@ function buildMarkdown(params: IExportToObsidianParams) {
   const sections = [frontmatter];
 
   if (body) {
-    sections.push('', body);
+    sections.push(body);
   }
 
-  return `${sections.join('\n').trim()}\n`;
+  return `${sections.join('\n').trim()}`;
 }
 
 async function writeToObsidian(filePath: string, content: string, config: IClipConfig) {
