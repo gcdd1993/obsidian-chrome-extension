@@ -1,8 +1,8 @@
 import { Readability } from '@mozilla/readability';
-import { CodeParsePlugin, ImageParsePlugin, LinkParsePlugin, HexoCodeParsePlugin, CanvasParsePlugin } from './plugin';
-import { BasePlugin } from './plugin/base';
-import { parsePageConfig } from './parsePageConfig';
 import { screenShot } from '../screen-shot';
+import { parsePageConfig } from './parsePageConfig';
+import { CanvasParsePlugin, CodeParsePlugin, ConfluenceCodeParsePlugin, HexoCodeParsePlugin, ImageParsePlugin, LinkParsePlugin } from './plugin';
+import { BasePlugin } from './plugin/base';
 
 class ParseDom {
   private parsePlugin: BasePlugin[] = [];
@@ -149,6 +149,7 @@ class ParseDom {
     this.parsePlugin.push(new LinkParsePlugin());
     this.parsePlugin.push(new ImageParsePlugin());
     this.parsePlugin.push(new CodeParsePlugin());
+    this.parsePlugin.push(new ConfluenceCodeParsePlugin());
     this.parsePlugin.push(new HexoCodeParsePlugin());
     this.parsePlugin.push(new CanvasParsePlugin());
   }
