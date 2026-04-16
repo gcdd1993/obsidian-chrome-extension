@@ -6,7 +6,10 @@ export class ImageParsePlugin extends BasePlugin {
     const images = cloneDom.querySelectorAll('img');
     const requestArray = Array.from(images).map(image => {
       return new Promise(async resolve => {
-        image.setAttribute('src', image.getAttribute('data-src') || image.currentSrc || image.src);
+        image.setAttribute(
+          'src',
+          image.getAttribute('data-image-src') || image.getAttribute('data-src') || image.currentSrc || image.src,
+        );
         const isOriginImage = /^(http|https):\/\//.test(image.src);
         if (!isOriginImage) {
           resolve(true);
